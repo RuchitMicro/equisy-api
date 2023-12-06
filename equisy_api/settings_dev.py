@@ -6,6 +6,8 @@ DEBUG           = True
 
 ALLOWED_HOSTS   = ['*']
 
+PROJECT_URL = 'development.com'
+
 # MIDDLEWARE
 if DEBUG:
     MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
@@ -34,7 +36,7 @@ DATABASES = {
 }
 
 # Django Tenant User
-TENANT_USERS_DOMAIN 	=   "localhost"
+TENANT_USERS_DOMAIN 	=   PROJECT_URL
 
 
 

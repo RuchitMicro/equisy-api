@@ -25,6 +25,8 @@ SECRET_KEY = 'django-insecure-z-7y@+gos+2rct1@p#)$*nx=*^nohi&^abcwi0$u_e05ya!3ls
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+PROJECT_URL = 'development.com'
+
 ALLOWED_HOSTS = []
 
 
@@ -33,7 +35,7 @@ SHARED_APPS = (
     'django_tenants', # mandatory
     'web', # you must list the app where your tenant model resides in
 
-    'django.contrib.postgres',
+    'django.contrib.postgres', 
 
     # everything below here is optional
     'django.contrib.admin',
@@ -52,6 +54,10 @@ SHARED_APPS = (
     'admin_reorder',
     'tinymce',
     'jsoneditor',
+
+    'livereload',
+    'debug_toolbar',
+    'simple_history',
 )
 
 TENANT_APPS = (
@@ -69,11 +75,12 @@ TENANT_APPS = (
 
 	# your tenant-specific apps
 	'tenant',
+    'django_cleanup.apps.CleanupConfig',
 )
 
 INSTALLED_APPS      =   list(SHARED_APPS) + [app for app in TENANT_APPS if app not in SHARED_APPS]
 
-TENANT_USERS_DOMAIN 	=   "localhost"
+TENANT_USERS_DOMAIN 	=   PROJECT_URL
 TENANT_MODEL            =   "web.Startup"
 TENANT_DOMAIN_MODEL     =   "web.Domain"
 
@@ -92,6 +99,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    # Simple History Middleware
+    'simple_history.middleware.HistoryRequestMiddleware',
+    
+    # JWT TOKEN VALIDATE
+    
 ]
 
 ROOT_URLCONF            = 'equisy_api.urls'
@@ -200,7 +213,11 @@ def get_secret(secret_name):
 #     }
 # }
 
-
+INTERNAL_IPS = [
+    "127.0.0.1",
+    "development.com",
+    "0.0.0.0",
+]
 
 
 

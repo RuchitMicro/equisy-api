@@ -54,6 +54,12 @@ from django_tenants.models import TenantMixin, DomainMixin
 # Django Tenant User
 from tenant_users.tenants.models import TenantBase, UserProfile
 
+# Simple History Model
+from simple_history.models import HistoricalRecords
+
+# Model Utils
+from model_utils        import FieldTracker
+from model_utils.fields import MonitorField, StatusField
 
 
 
@@ -75,6 +81,9 @@ class CommonModel(models.Model):
     created_by              =   models.ForeignKey       (settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="%(class)s_created_by", null=True, blank=True)
     updated_by              =   models.ForeignKey       (settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="%(class)s_updated_by", null=True, blank=True)
     has_object_permission   =   models.BooleanField     (default=False, help_text="Make it true if you want to add object level permissions for this record.")
+
+    history                 =   HistoricalRecords()
+    tracker                 =   FieldTracker()
 
     # Common Admin Meta for all models
     common_admin_meta = {
@@ -140,6 +149,21 @@ class FileMaster(CommonModel):
 
 
 # MODELS GOES HERE
+class TenantUser(UserProfile):
+    b2c_id  =   models.CharField(max_length=100)
+
+class Startup(TenantBase):
+    name            =   models.CharField(max_length=100)
+    paid_until      =   models.DateField()
+    on_trial        =   models.BooleanField()
+    created_on      =   models.DateField(auto_now_add=True)
+
+    # default true, schema will be automatically created and synced when it is saved
+    auto_create_schema = True
+
+class Domain(DomainMixin):
+    pass
+
 # Global Settings
 class SiteSetting(CommonModel):
     logo                    =   models.ImageField   (blank=True,null=True,upload_to='settings/')
@@ -231,21 +255,6 @@ class SiteSetting(CommonModel):
     
     def save(self, *args, **kwargs):
         super(SiteSetting, self).save(*args, **kwargs)
-
-class Startup(TenantBase):
-    name            =   models.CharField(max_length=100)
-    paid_until      =   models.DateField()
-    on_trial        =   models.BooleanField()
-    created_on      =   models.DateField(auto_now_add=True)
-
-    # default true, schema will be automatically created and synced when it is saved
-    auto_create_schema = True
-
-class Domain(DomainMixin):
-    pass
-
-class TenantUser(UserProfile):
-    name    =   models.CharField(max_length=100)
 
 
 
