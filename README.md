@@ -60,3 +60,4 @@ The application consists of two primary Django apps: `tenant` and `web`.
 
 - **Tenant Models**: Define models specific to each tenant.
 - **Web Models**: Include models for managing the tenants and global settings.
+# equisy-api
